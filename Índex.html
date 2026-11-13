@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mimoê Personalizados | Você imagina. A gente cria.</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mimoe: {
+                            purple: '#7c3aed',
+                            dark: '#581c87',
+                            light: '#f3e8ff',
+                            yellow: '#facc15',
+                            festive: '#dc2626',
+                            festiveGreen: '#16a34a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f3e8ff; }
+        ::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #581c87; }
+        
+        .snow-bg {
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 4px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 4px),
+                radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 3px);
+            background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px; 
+            background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
+            animation: snow 20s linear infinite;
+        }
+        @keyframes snow {
+            0% { background-position: 0px 0px, 40px 60px, 130px 270px, 70px 100px; }
+            100% { background-position: 550px 550px, 390px 410px, 380px 520px, 220px 250px; }
+        }
+        
+        /* Checkbox styling */
+        input[type="checkbox"]:checked {
+            background-color: #7c3aed;
+            border-color: #7c3aed;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased overflow-x-hidden">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-24 right-4 z-50 transform translate-x-full opacity-0 transition-all duration-300 bg-white border-l-4 border-mimoe-purple shadow-xl px-6 py-4 rounded-r-xl flex items-center gap-3 pointer-events-none">
+        <div class="bg-mimoe-light text-mimoe-purple w-8 h-8 rounded-full flex items-center justify-center">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        <div>
+            <p class="font-bold text-sm text-slate-800">Adicionado com sucesso!</p>
+            <p class="text-xs text-slate-500">O produto está no seu carrinho.</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-40 bg-white/95 backdrop-blur-md border-b border-mimoe-purple/10 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-mimoe-purple to-pink-500 flex items-center justify-center text-white shadow-lg">
+                    <i class="fa-solid fa-crown text-mimoe-yellow text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-mimoe-dark to-mimoe-purple tracking-tight leading-none">MIMOÊ</h1>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Você imagina. A gente cria.</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <a href="https://instagram.com/mimoe.personalizadosofc" target="_blank" class="hidden md:flex items-center gap-2 text-mimoe-purple hover:bg-mimoe-light px-4 py-2 rounded-xl transition-colors font-semibold text-sm">
+                    <i class="fa-brands fa-instagram text-lg"></i>
+                    @mimoe.personalizadosofc
+                </a>
+                
+                <button onclick="toggleCart()" class="relative bg-mimoe-purple text-white w-12 h-12 rounded-xl flex items-center justify-center hover:bg-mimoe-dark transition-colors shadow-md group">
+                    <i class="fa-solid fa-cart-shopping text-lg group-hover:scale-110 transition-transform"></i>
+                    <span id="cart-badge" class="absolute -top-2 -right-2 bg-mimoe-yellow text-mimoe-dark text-xs font-black w-6 h-6 rounded-full flex items-center justify-center shadow-sm border-2 border-white scale-0 transition-transform">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 bg-mimoe-dark overflow-hidden snow-bg">
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-mimoe-purple rounded-full blur-3xl opacity-50"></div>
+        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-mimoe-festive rounded-full blur-3xl opacity-30"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <span class="inline-flex items-center gap-2 bg-white/10 text-mimoe-yellow border border-mimoe-yellow/30 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider mb-6 backdrop-blur-sm">
+                <i class="fa-solid fa-tree text-mimoe-festiveGreen"></i> Especial de Natal 2026
+            </span>
+            <h2 class="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight leading-tight mb-6 drop-shadow-lg">
+                Presentes e Lembranças <br class="hidden sm:block">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-mimoe-yellow to-amber-300 drop-shadow-none">com muito amor.</span>
+            </h2>
+            <p class="text-purple-100 text-lg sm:text-xl max-w-2xl mx-auto mb-10 font-medium drop-shadow">
+                Explore nosso catálogo e encomende o seu diretamente pelo WhatsApp. Conheça nosso <strong class="text-mimoe-yellow">Kit Calendário 2027</strong> e muito mais!
+            </p>
+            <a href="#produtos" class="inline-flex items-center gap-3 bg-mimoe-yellow text-mimoe-dark hover:bg-yellow-400 font-extrabold px-8 py-4 rounded-2xl transition-all shadow-[0_0_40px_rgba(250,204,21,0.3)] hover:scale-105">
+                Ver Catálogo Completo <i class="fa-solid fa-arrow-down"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Product Grid -->
+    <main id="produtos" class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h3 class="text-3xl font-black text-mimoe-dark">Nossos Produtos</h3>
+                <div class="w-24 h-1.5 bg-mimoe-purple mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="catalog-container">
+                <!-- Javascript will render products here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-mimoe-dark text-white py-12 border-t border-purple-800">
+        <div class="max-w-7xl mx-auto px-4 text-center flex flex-col items-center">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-mimoe-purple to-pink-500 flex items-center justify-center text-white mb-4">
+                <i class="fa-solid fa-crown text-mimoe-yellow text-2xl"></i>
+            </div>
+            <h4 class="text-2xl font-black mb-2 tracking-tight">MIMOÊ</h4>
+            <p class="text-purple-300 text-sm mb-6 uppercase tracking-widest font-bold">Você imagina. A gente cria.</p>
+            <div class="flex justify-center gap-4 mb-8">
+                <a href="https://instagram.com/mimoe.personalizadosofc" target="_blank" class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center hover:bg-gradient-to-tr hover:from-pink-500 hover:to-purple-500 transition-all text-xl">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="https://wa.me/5511963014665" target="_blank" class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center hover:bg-green-500 transition-all text-xl">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </a>
+            </div>
+            <p class="text-xs text-purple-400 font-medium">© 2026 Mimoê Personalizados. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Shopping Cart Overlay & Sidebar -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity" onclick="toggleCart()"></div>
+    
+    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full sm:w-[450px] bg-white z-50 transform translate-x-full transition-transform duration-300 flex flex-col shadow-2xl">
+        <!-- Cart Header -->
+        <div class="h-20 px-6 bg-mimoe-purple flex items-center justify-between text-white shrink-0 shadow-md">
+            <h2 class="text-xl font-black flex items-center gap-3">
+                <i class="fa-solid fa-cart-shopping text-mimoe-yellow"></i>
+                Seu Carrinho
+            </h2>
+            <button onclick="toggleCart()" class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Cart Items -->
+        <div id="cart-items" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-slate-50">
+            <!-- Empty state -->
+            <div id="cart-empty" class="h-full flex flex-col items-center justify-center text-slate-400 space-y-4">
+                <i class="fa-solid fa-basket-shopping text-6xl text-slate-300 mb-2"></i>
+                <p class="font-medium text-center text-lg">Seu carrinho está vazio.</p>
+                <button onclick="toggleCart()" class="mt-2 px-6 py-2.5 bg-mimoe-light text-mimoe-purple rounded-xl font-bold hover:bg-purple-200 transition-colors">Ver Produtos</button>
+            </div>
+        </div>
+
+        <!-- Cart Footer -->
+        <div id="cart-footer" class="bg-white border-t border-slate-200 p-6 shrink-0 hidden shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
+            <div class="flex justify-between items-end mb-6">
+                <span class="text-slate-500 font-bold uppercase text-xs tracking-wider">Total Estimado</span>
+                <span id="cart-total" class="text-3xl font-black text-mimoe-dark leading-none">R$ 0,00</span>
+            </div>
+            <button onclick="checkoutWhatsApp()" class="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-extrabold text-lg py-4 rounded-2xl shadow-lg shadow-green-500/30 flex items-center justify-center gap-3 transition-all hover:scale-[1.02]">
+                <i class="fa-brands fa-whatsapp text-2xl"></i>
+                Finalizar Pedido
+            </button>
+            <p class="text-[10px] text-center text-slate-400 mt-3 font-medium">* Detalhes de fotos e frete serão acertados no WhatsApp.</p>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const products = [
+            {
+                id: 'botton-broche', name: 'Bottons Redondos (Broche)', img: 'https://images.unsplash.com/photo-1543589077-47d81606c1bf?auto=format&fit=crop&q=80&w=400',
+                badge: 'Clássico',
+                options: [ { size: '25mm', price: 9.90 }, { size: '32mm', price: 10.90 }, { size: '58mm', price: 11.90 } ]
+            },
+            {
+                id: 'botton-natal', name: 'Botton de Natal Personalizado', img: 'https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&q=80&w=400',
+                badge: '🎄 Natal',
+                options: [ { size: '32mm', price: 12.90 }, { size: '58mm', price: 13.90 } ]
+            },
+            {
+                id: 'botton-natal-duplo', name: 'Botton de Natal Duplo', img: 'https://images.unsplash.com/photo-1513297887119-d46091b24bfa?auto=format&fit=crop&q=80&w=400',
+                badge: '🎄 Natal Premium',
+                options: [ { size: '32mm', price: 14.90 }, { size: '58mm', price: 16.90 } ]
+            },
+            {
+                id: 'botton-natal-cordao', name: 'Botton de Natal com Cordão', img: 'https://images.unsplash.com/photo-1543589077-47d81606c1bf?auto=format&fit=crop&q=80&w=400',
+                badge: '🎄 Para Árvore',
+                options: [ { size: '32mm', price: 13.90 }, { size: '58mm', price: 14.90 } ]
+            },
+            {
+                id: 'foto-ima', name: 'Foto Ímã Redondo', img: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&q=80&w=400',
+                badge: 'Geladeira',
+                options: [ { size: '25mm', price: 11.90 }, { size: '32mm', price: 12.90 }, { size: '58mm', price: 13.90 } ]
+            },
+            {
+                id: 'calendario-2027', name: 'Kit Calendários 2027', img: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&q=80&w=400',
+                badge: '✨ Promoção',
+                options: [ { size: '12 Meses', price: 120.80 } ]
+            },
+            {
+                id: 'chaveiro', name: 'Chaveiro Personalizado', img: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=400',
+                badge: null,
+                options: [ { size: '32mm', price: 11.90 }, { size: '58mm', price: 13.90 } ]
+            },
+            {
+                id: 'porta-cracha', name: 'Porta Crachá', img: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=400',
+                badge: 'Utilidade',
+                options: [ { size: '25mm', price: 10.90 }, { size: '32mm', price: 11.90 } ]
+            },
+            {
+                id: 'aplique-canetas', name: 'Aplique de Canetas', img: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&q=80&w=400',
+                badge: 'Papelaria',
+                options: [ { size: '25mm', price: 9.90 }, { size: '32mm', price: 11.90 } ]
+            },
+            {
+                id: 'abridor-latinhas', name: 'Abridor de Latinhas', img: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&q=80&w=400',
+                badge: null,
+                options: [ { size: 'Padrão', price: 13.90 } ]
+            },
+            {
+                id: 'abridor-garrafas', name: 'Abridor de Garrafas', img: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&q=80&w=400',
+                badge: 'Magnético',
+                options: [ { size: 'Padrão', price: 16.90 } ]
+            }
+        ];
+
+        let cart = [];
+
+        const formatBRL = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+        function renderCatalog() {
+            const container = document.getElementById('catalog-container');
+            container.innerHTML = '';
+
+            products.forEach(p => {
+                const hasSizes = p.options.length > 1;
+                const badgeHtml = p.badge ? `<span class="absolute top-3 right-3 bg-mimoe-purple text-white text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md z-10">${p.badge}</span>` : '';
+                
+                let selectHtml = '';
+                if(hasSizes) {
+                    selectHtml = `
+                        <select id="size-${p.id}" class="w-full mb-3 bg-white border border-slate-300 text-slate-700 rounded-xl px-3 py-2 text-sm font-medium focus:outline-none focus:border-mimoe-purple focus:ring-1 focus:ring-mimoe-purple">
+                            ${p.options.map((opt, i) => `<option value="${i}">${opt.size} - ${formatBRL(opt.price)}</option>`).join('')}
+                        </select>`;
+                } else {
+                    selectHtml = `
+                        <div class="mb-3 w-full bg-slate-100 border border-slate-200 text-slate-500 rounded-xl px-3 py-2 text-sm text-center font-medium">
+                            ${p.options[0].size} - ${formatBRL(p.options[0].price)}
+                            <input type="hidden" id="size-${p.id}" value="0">
+                        </div>`;
+                }
+
+                const cardHtml = `
+                    <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-slate-200 flex flex-col group">
+                        <div class="relative h-56 bg-slate-200 overflow-hidden">
+                            ${badgeHtml}
+                            <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x400/7c3aed/ffffff?text=Mimoê'">
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col">
+                            <h4 class="text-lg font-bold text-slate-800 mb-4 leading-tight">${p.name}</h4>
+                            
+                            <div class="mt-auto">
+                                ${selectHtml}
+                                
+                                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 mb-4 space-y-2">
+                                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Adicionais (Opcional):</p>
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" id="arte-${p.id}" class="w-4 h-4 text-mimoe-purple rounded border-slate-300 focus:ring-mimoe-purple">
+                                        <span class="text-sm font-medium text-slate-700">Arte Personalizada (+R$ 5,00)</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" id="holo-${p.id}" class="w-4 h-4 text-mimoe-purple rounded border-slate-300 focus:ring-mimoe-purple">
+                                        <span class="text-sm font-medium text-slate-700">Papel Holográfico (+R$ 2,50)</span>
+                                    </label>
+                                </div>
+
+                                <div class="flex gap-2">
+                                    <input type="number" id="qty-${p.id}" min="1" value="1" class="w-20 bg-white border border-slate-300 rounded-xl px-2 py-2 text-center font-bold text-slate-700 focus:outline-none focus:border-mimoe-purple focus:ring-1 focus:ring-mimoe-purple">
+                                    <button onclick="addToCart('${p.id}')" class="flex-1 bg-mimoe-purple hover:bg-mimoe-dark text-white font-bold py-2 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                                        <i class="fa-solid fa-cart-plus"></i> Adicionar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', cardHtml);
+            });
+        }
+
+        window.addToCart = function(id) {
+            const product = products.find(p => p.id === id);
+            const sizeIdx = parseInt(document.getElementById(`size-${id}`).value);
+            const qty = parseInt(document.getElementById(`qty-${id}`).value);
+            const addArte = document.getElementById(`arte-${id}`).checked;
+            const addHolo = document.getElementById(`holo-${id}`).checked;
+            
+            const option = product.options[sizeIdx];
+            
+            // Build unique ID for grouping exact same configurations
+            const cartId = `${id}-${sizeIdx}-${addArte}-${addHolo}`;
+            const existing = cart.find(item => item.cartId === cartId);
+
+            if(existing) {
+                existing.qty += qty;
+            } else {
+                cart.push({
+                    cartId,
+                    id: product.id,
+                    name: product.name,
+                    img: product.img,
+                    size: option.size,
+                    basePrice: option.price,
+                    qty: qty,
+                    addArte: addArte,
+                    addHolo: addHolo
+                });
+            }
+
+            // Reset inputs
+            document.getElementById(`qty-${id}`).value = 1;
+            document.getElementById(`arte-${id}`).checked = false;
+            document.getElementById(`holo-${id}`).checked = false;
+
+            updateCart();
+            
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-x-full', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-x-full', 'opacity-0'), 3000);
+        }
+
+        window.updateQty = function(cartId, delta) {
+            const index = cart.findIndex(item => item.cartId === cartId);
+            if(index > -1) {
+                cart[index].qty += delta;
+                if(cart[index].qty <= 0) {
+                    cart.splice(index, 1);
+                }
+                updateCart();
+            }
+        }
+
+        window.removeCartItem = function(cartId) {
+            cart = cart.filter(item => item.cartId !== cartId);
+            updateCart();
+        }
+
+        function updateCart() {
+            const container = document.getElementById('cart-items');
+            const emptyState = document.getElementById('cart-empty');
+            const footer = document.getElementById('cart-footer');
+            const badge = document.getElementById('cart-badge');
+            
+            // Count total items
+            const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
+            badge.textContent = totalQty;
+            totalQty > 0 ? badge.classList.remove('scale-0') : badge.classList.add('scale-0');
+
+            if(cart.length === 0) {
+                emptyState.classList.remove('hidden');
+                footer.classList.add('hidden');
+                // clear items
+                Array.from(container.children).forEach(c => { if(c.id !== 'cart-empty') c.remove() });
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            footer.classList.remove('hidden');
+            Array.from(container.children).forEach(c => { if(c.id !== 'cart-empty') c.remove() });
+
+            let totalValue = 0;
+
+            cart.forEach(item => {
+                let unitPrice = item.basePrice;
+                let addOnsText = [];
+                if(item.addArte) { unitPrice += 5.00; addOnsText.push('Arte'); }
+                if(item.addHolo) { unitPrice += 2.50; addOnsText.push('Holo'); }
+                
+                const itemTotal = unitPrice * item.qty;
+                totalValue += itemTotal;
+
+                const addOnBadge = addOnsText.length > 0 
+                    ? `<span class="text-[10px] bg-purple-100 text-mimoe-purple px-2 py-0.5 rounded font-bold">+ ${addOnsText.join(', ')}</span>` 
+                    : '';
+
+                const html = `
+                    <div class="bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200 flex gap-3 relative group">
+                        <button onclick="removeCartItem('${item.cartId}')" class="absolute -top-2 -right-2 w-6 h-6 bg-red-100 text-red-500 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500 hover:text-white">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                        
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-slate-100 shrink-0">
+                            <img src="${item.img}" class="w-full h-full object-cover">
+                        </div>
+                        
+                        <div class="flex-1 flex flex-col justify-between py-0.5">
+                            <div>
+                                <h5 class="font-bold text-slate-800 leading-tight text-xs sm:text-sm pr-4">${item.name}</h5>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-xs text-slate-500 font-medium">${item.size}</span>
+                                    ${addOnBadge}
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between mt-2">
+                                <span class="font-black text-mimoe-purple">${formatBRL(itemTotal)}</span>
+                                
+                                <div class="flex items-center bg-slate-50 border border-slate-200 rounded-lg h-7">
+                                    <button onclick="updateQty('${item.cartId}', -1)" class="w-7 h-full flex items-center justify-center text-slate-500 hover:text-mimoe-purple hover:bg-mimoe-light rounded-l-lg transition-colors"><i class="fa-solid fa-minus text-[10px]"></i></button>
+                                    <span class="w-6 sm:w-8 text-center text-xs font-bold text-slate-700">${item.qty}</span>
+                                    <button onclick="updateQty('${item.cartId}', 1)" class="w-7 h-full flex items-center justify-center text-slate-500 hover:text-mimoe-purple hover:bg-mimoe-light rounded-r-lg transition-colors"><i class="fa-solid fa-plus text-[10px]"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', html);
+            });
+
+            document.getElementById('cart-total').textContent = formatBRL(totalValue);
+        }
+
+        window.toggleCart = function() {
+            const sidebar = document.getElementById('cart-sidebar');
+            const overlay = document.getElementById('cart-overlay');
+            if (sidebar.classList.contains('translate-x-full')) {
+                sidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+            } else {
+                sidebar.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+            }
+        }
+
+        window.checkoutWhatsApp = function() {
+            if(cart.length === 0) return;
+
+            let text = "🎄 *Olá! Gostaria de fazer um pedido na Mimoê Personalizados:* 🎄\n\n";
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                let unitPrice = item.basePrice;
+                if(item.addArte) unitPrice += 5.00;
+                if(item.addHolo) unitPrice += 2.50;
+                
+                const itemTotal = unitPrice * item.qty;
+                total += itemTotal;
+
+                text += `*${index+1}. ${item.name}*\n`;
+                text += `• Quantidade: ${item.qty}x\n`;
+                text += `• Tamanho/Modelo: ${item.size}\n`;
+                if(item.addArte) text += `• Adicional: Arte (+ R$ 5,00/un)\n`;
+                if(item.addHolo) text += `• Adicional: Papel Holográfico (+ R$ 2,50/un)\n`;
+                text += `• Subtotal: R$ ${itemTotal.toFixed(2).replace('.', ',')}\n\n`;
+            });
+
+            text += `━━━━━━━━━━━━━━━━━━━━\n`;
+            text += `*TOTAL ESTIMADO: R$ ${total.toFixed(2).replace('.', ',')}*\n`;
+            text += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+            text += `Fico no aguardo para combinarmos os detalhes (fotos, frete e pagamento)! ✨`;
+
+            const encoded = encodeURIComponent(text);
+            window.open(`https://wa.me/5511963014665?text=${encoded}`, '_blank');
+        }
+
+        window.onload = renderCatalog;
+    </script>
+</body>
+</html>
